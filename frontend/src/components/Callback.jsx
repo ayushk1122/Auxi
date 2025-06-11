@@ -21,11 +21,18 @@ function Callback({ onAuthSuccess }) {
                 })
 
                 const { access_token } = response.data
+                if (!access_token) {
+                    console.error('No access token received:', response.data)
+                    navigate('/')
+                    return
+                }
+
+                console.log('Received access token:', access_token)  // Debug log
                 localStorage.setItem('spotify_access_token', access_token)
                 onAuthSuccess(access_token)
                 navigate('/')
             } catch (error) {
-                console.error('Auth error:', error)
+                console.error('Auth error:', error.response?.data || error)
                 navigate('/')
             }
         }

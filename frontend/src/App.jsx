@@ -14,6 +14,7 @@ function App() {
     useEffect(() => {
         // Check if user is already authenticated
         const token = localStorage.getItem('spotify_access_token')
+        console.log('Token from localStorage:', token)  // Debug log
         if (token) {
             setAccessToken(token)
             setIsAuthenticated(true)
@@ -34,6 +35,18 @@ function App() {
         setAccessToken(null)
         setIsAuthenticated(false)
     }
+
+    const handleAuthSuccess = (token) => {
+        console.log('Auth success with token:', token)  // Debug log
+        localStorage.setItem('spotify_access_token', token)
+        setAccessToken(token)
+        setIsAuthenticated(true)
+    }
+
+    // Add this console log to debug
+    useEffect(() => {
+        console.log('Current access token:', accessToken)
+    }, [accessToken])
 
     return (
         <Router>
@@ -77,10 +90,7 @@ function App() {
                             path="/callback"
                             element={
                                 <Callback
-                                    onAuthSuccess={(token) => {
-                                        setAccessToken(token)
-                                        setIsAuthenticated(true)
-                                    }}
+                                    onAuthSuccess={handleAuthSuccess}
                                 />
                             }
                         />
